@@ -62,7 +62,7 @@ void GameEngine::Scene::end()
 
 void GameEngine::Scene::addEntity(Entity* entity)
 {
-	m_entities.pushFront(entity);
+	m_entities.add(entity);
 }
 
 void GameEngine::Scene::removeEntity(Entity* entity)

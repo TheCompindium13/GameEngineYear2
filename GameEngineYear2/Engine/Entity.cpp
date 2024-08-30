@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "TransformComponent.h"
+
 GameEngine::Entity::Entity()
 {
 	TransformComponent* transform = new TransformComponent();
@@ -16,6 +17,7 @@ void GameEngine::Entity::start()
 		if (component->getEnabled())
 			component->start();
 	}
+
 	onStart();
 }
 
@@ -26,6 +28,7 @@ void GameEngine::Entity::update(double deltaTime)
 		if (component->getEnabled())
 			component->update(deltaTime);
 	}
+
 	onUpdate(deltaTime);
 }
 
@@ -36,6 +39,7 @@ void GameEngine::Entity::fixedUpdate(float fixedDeltaTime)
 		if (component->getEnabled())
 			component->fixedUpdate(fixedDeltaTime);
 	}
+
 	onFixedUpdate(fixedDeltaTime);
 }
 
@@ -46,7 +50,6 @@ void GameEngine::Entity::draw()
 		if (component->getEnabled())
 			component->draw();
 	}
-	
 }
 
 void GameEngine::Entity::end()
@@ -62,25 +65,15 @@ void GameEngine::Entity::end()
 void GameEngine::Entity::addComponent(Component* component)
 {
 	component->setOwner(this);
-	m_components.pushFront(component);
-
+	m_components.add(component);
 }
 
-
-bool GameEngine::Entity::getEnabled()
+void GameEngine::Entity::setEnabled(bool enabled)
 {
-	return m_enabled;
-}
-
-void GameEngine::Entity::setEnabled(bool Enabled)
-{
-	if (!m_enabled && Enabled)
-	{
+	if (!m_enabled && enabled)
 		onEnable();
-	}
-	else if (m_enabled && !Enabled)
-	{
+	else if (m_enabled && !enabled)
 		onDisable();
-	}
-	m_enabled = Enabled;
+
+	m_enabled = enabled;
 }

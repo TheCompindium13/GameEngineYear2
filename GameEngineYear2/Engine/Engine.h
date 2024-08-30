@@ -34,7 +34,7 @@ namespace GameEngine
 	private:
 		void start();
 		void update(double deltaTime);
-		void fixedUpdate(float fixedDeltaTime);
+		void fixedUpdate();
 		void draw();
 		void end();
 

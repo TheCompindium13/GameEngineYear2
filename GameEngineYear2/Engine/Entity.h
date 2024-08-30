@@ -1,12 +1,14 @@
 #pragma once
 #include "List.h"
 #include "Component.h"
+
 namespace GameEngine
 {
 	class TransformComponent;
+
 	class Entity
 	{
-	public: 
+	public:
 		Entity();
 
 		void start();
@@ -36,31 +38,35 @@ namespace GameEngine
 		bool getStarted() { return m_started; }
 		TransformComponent* getTransform() { return m_transform; }
 
-		bool getEnabled();
-		void setEnabled(bool Enabled);
+		bool getEnabled() { return m_enabled; }
+		void setEnabled(bool enabled);
+
 	private:
 		bool m_started;
 		bool m_enabled;
 		TransformComponent* m_transform;
 		List<Component*> m_components;
 	};
+
 	template<typename T>
 	inline T* Entity::addComponent()
 	{
 		Component* component = new T();
 
 		component->setOwner(this);
-		m_components.pushFront(component);
+		m_components.add(component);
+
 		return (T*)component;
 	}
+
 	template<typename T>
 	inline T* Entity::addComponent(T* component)
 	{
 		component->setOwner(this);
-		m_components.pushFront(component);
-
+		m_components.add(component);
 		return component;
 	}
+
 	template<typename T>
 	inline T* Entity::getComponent()
 	{
@@ -71,6 +77,7 @@ namespace GameEngine
 			if (result = dynamic_cast<T*>(component))
 				break;
 		}
+
 		return result;
 	}
 }
