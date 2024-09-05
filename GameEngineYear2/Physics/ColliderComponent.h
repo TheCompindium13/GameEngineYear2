@@ -37,6 +37,8 @@ namespace GamePhysics
 
 		RigidBodyComponent* getRigidBody() { return m_rigidBody; }
 
+		void setCollisionNormal(GameMath::Vector2 normal) { normal = normal; }
+
 	private:
 		bool m_isTrigger;
 		ColliderType m_colliderType;
