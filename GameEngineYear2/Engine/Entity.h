@@ -34,6 +34,8 @@ namespace GameEngine
 		virtual void onEnd() {}
 		virtual void onEnable() {}
 		virtual void onDisable() {}
+		virtual void onCollisionEnter(GamePhysics::Collision* collision);
+
 
 		bool getStarted() { return m_started; }
 		TransformComponent* getTransform() { return m_transform; }

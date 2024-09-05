@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include "Entity.h"
+#include "Physics/ColliderComponent.h"
+
 GameEngine::Scene::Scene()
 {
 	m_entities = List<Entity*>();
@@ -30,6 +32,7 @@ void GameEngine::Scene::update(double deltaTime)
 
 void GameEngine::Scene::fixedUpdate(float fixedDeltaTime)
 {
+	// Update Entities
 	for (Entity* entity : m_entities)
 	{
 		if (!entity->getStarted())
@@ -39,7 +42,36 @@ void GameEngine::Scene::fixedUpdate(float fixedDeltaTime)
 
 
 	}
+
 	onFixedUpdate(fixedDeltaTime);
+
+	// Update Colliders
+	for (auto row = m_activeColliders.begin(); row != m_activeColliders.end(); row++)
+	{
+		for (auto column = row; column != m_activeColliders.end(); column++)
+		{
+			if (row == column)
+			{
+				continue;
+			}
+			GamePhysics::Collision* collisionData1 = nullptr;
+			GamePhysics::Collision* collisionData2 = new GamePhysics::Collision();
+			GamePhysics::ColliderComponent* collider1 = *row;
+			GamePhysics::ColliderComponent* collider2 = *column;
+
+			if (collisionData1 = collider1->checkCollision(collider2))
+			{
+				// Get collider 1 rigidbody and resolve collision
+
+				collider1->getOwner()->onCollisionEnter(collisionData1);
+
+				collisionData2->normal = collisionData1->normal * -1;
+				collisionData2->collider = collider1;
+				collider2->getOwner()->onCollisionEnter(collisionData2);
+
+			}
+		}
+	}
 }
 
 void GameEngine::Scene::draw()

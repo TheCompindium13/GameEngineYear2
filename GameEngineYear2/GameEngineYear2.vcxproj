@@ -148,6 +148,8 @@
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Math\Vector4.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
+    <ClCompile Include="Physics\CircleColliderComponent.cpp" />
+    <ClCompile Include="Physics\ColliderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component.h" />
@@ -163,6 +165,8 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Graphics\Window.h" />
+    <ClInclude Include="Physics\CircleColliderComponent.h" />
+    <ClInclude Include="Physics\ColliderComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

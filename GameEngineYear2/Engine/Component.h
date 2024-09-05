@@ -1,5 +1,10 @@
 #pragma once
 
+namespace GamePhysics
+{
+	class Collision;
+	class ColliderComponent;
+}
 namespace GameEngine
 {
 	class Entity;
@@ -15,6 +20,7 @@ namespace GameEngine
 		virtual void end() {}
 		virtual void onEnable() {}
 		virtual void onDisable() {}
+		virtual void onCollisionEnter(GamePhysics::Collision* other) {};
 
 		bool getEnabled() { return m_enabled; }
 		void setEnabled(bool enabled);
