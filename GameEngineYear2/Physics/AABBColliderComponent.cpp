@@ -2,6 +2,14 @@
 #include "Engine/Entity.h"
 #include "CircleColliderComponent.h"
 #include <algorithm>
+#include <raylib.h>
+
+GamePhysics::AABBColliderComponent::AABBColliderComponent(float width, float height) : ColliderComponent()
+{
+	setColliderType(AABB);
+	m_width = width;
+	m_height = height;
+}
 
 float GamePhysics::AABBColliderComponent::getLeft()
 {
@@ -23,14 +31,24 @@ float GamePhysics::AABBColliderComponent::getBottom()
     return getOwner()->getTransform()->getGlobalPosition().y + getHeight() / 2;
 }
 
+void GamePhysics::AABBColliderComponent::draw()
+{
+	GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
+
+	RAYLIB_H::DrawRectangleLines(position.x,position.y, getWidth(),getHeight(), GetColor(getColor()));
+}
+
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle(CircleColliderComponent* other)
 {
-    
+	if (other->getOwner() == getOwner())
+		return nullptr;
 	return other->checkCollisionAABB(this);
 }
 
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(AABBColliderComponent* other)
 {
+	if (other->getOwner() == getOwner())
+		return nullptr;
 	GamePhysics::Collision* collisionData = new Collision();
 
 	if (other->getLeft() <= getRight() &&

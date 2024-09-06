@@ -6,7 +6,7 @@ namespace GamePhysics
 	class CircleColliderComponent : public ColliderComponent
 	{
 	public:
-		CircleColliderComponent(float radius) : ColliderComponent() { m_radius = radius; }
+		CircleColliderComponent(float radius);
 
 		GamePhysics::Collision* checkCollisionCircle(CircleColliderComponent* other) override;
 		GamePhysics::Collision* checkCollisionAABB(AABBColliderComponent* other) override;

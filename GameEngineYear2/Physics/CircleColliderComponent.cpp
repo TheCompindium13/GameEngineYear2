@@ -5,6 +5,12 @@
 #include "Engine/Entity.h"
 #include <raylib.h>
 
+GamePhysics::CircleColliderComponent::CircleColliderComponent(float radius) : ColliderComponent()
+{
+    setColliderType(CIRCLE);
+    m_radius = radius;
+}
+
 GamePhysics::Collision* GamePhysics::CircleColliderComponent::checkCollisionCircle(CircleColliderComponent* other)
 {
     GameMath::Vector2 otherPosition = other->getOwner()->getTransform()->getGlobalPosition();
@@ -27,27 +33,58 @@ GamePhysics::Collision* GamePhysics::CircleColliderComponent::checkCollisionCirc
 
 GamePhysics::Collision* GamePhysics::CircleColliderComponent::checkCollisionAABB(AABBColliderComponent* other)
 {
-    //Get the direction from this collider to the AABB
-    GameMath::Vector2 direction = getOwner()->getTransform()->getGlobalPosition() - other->getOwner()->getTransform()->getGlobalPosition();
+    if (other->getOwner() == getOwner())
+        return nullptr;
 
-    //Clamp the direction vector to be within the bounds of the AABB
-    if (direction.x < -other->getOwner()->getWidth() / 2)
-        direction.x = -other->getWidth() / 2;
-    else if (direction.x > other->getWidth() / 2)
-        direction.x = other->getWidth() / 2;
+    GamePhysics::Collision* collisionData = new Collision();
 
-    if (direction.y < -other->getHeight() / 2)
-        direction.y = -other->getHeight() / 2;
-    else if (direction.y > other->getHeight() / 2)
-        direction.y = other->getHeight() / 2;
+    // Get the positions
+    GameMath::Vector2 circlePos = getOwner()->getTransform()->getGlobalPosition();
+    GameMath::Vector2 aabbPos = other->getOwner()->getTransform()->getGlobalPosition();
 
-    //Add the direction vector to the AABB center to get the closest point to the circle
-    GameMath::Vector2 closestPoint = other->getOwner()->getTransform()->getGlobalPosition() + direction;
+    // Get the direction from the circle to the AABB
+    GameMath::Vector2 direction = circlePos - aabbPos;
 
-    //Get the distance between the circle and the closest point found
-    float distanceFromClosestPoint = (getOwner()->getTransform()->getGlobalPosition() - closestPoint).getMagnitude();
+    // Clamp the direction vector to be within the bounds of the AABB
+    float halfWidth = other->getWidth() / 2;
+    float halfHeight = other->getHeight() / 2;
 
-    setCollisionNormal((other->getOwner()->getTransform()->getGlobalPosition() - closestPoint).getNormalized());
+    if (direction.x < -halfWidth)
+        direction.x = -halfWidth;
+    else if (direction.x > halfWidth)
+        direction.x = halfWidth;
+
+    if (direction.y < -halfHeight)
+        direction.y = -halfHeight;
+    else if (direction.y > halfHeight)
+        direction.y = halfHeight;
+
+    // Calculate the closest point on the AABB
+    GameMath::Vector2 closestPoint = aabbPos + direction;
+
+    // Get the distance between the circle and the closest point found
+    float distanceFromClosestPoint = (circlePos - closestPoint).getMagnitude();
+
+    // Check for collision
+    float circleRadius = getRadius();  // Assuming getRadius() returns the radius of the circle
+    if (distanceFromClosestPoint <= circleRadius)
+    {
+        // Set collision data
+        
+        collisionData->normal = (closestPoint - circlePos).normalize();  // Normal pointing from circle to AABB
+        collisionData->penetrationDistance = circleRadius - distanceFromClosestPoint;  // Depth of penetration
+
+        // You might also want to set additional data such as the collision point
+        collisionData->contactPoint = closestPoint;
+    }
+    else
+    {
+        // No collision
+        delete collisionData;  // Clean up unused collision data
+        return nullptr;
+    }
+
+    return collisionData;
 }
 
 void GamePhysics::CircleColliderComponent::draw()

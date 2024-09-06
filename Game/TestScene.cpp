@@ -3,6 +3,7 @@
 #include "Graphics/ShapeComponent.h"
 #include "Engine/TransformComponent.h"
 #include "Physics/CircleColliderComponent.h"
+#include "Physics/AABBColliderComponent.h"
 #include "chrono"
 void TestScene::onStart()
 {
@@ -10,8 +11,8 @@ void TestScene::onStart()
 	m_circle1 = new GameEngine::Entity();
 	m_circle1->getTransform()->setLocalScale({ 40,40 });
 	m_circle1->getTransform()->setLocalPosition({ 100,100 });
-	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
-	m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
+	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_circle1->addComponent(new GamePhysics::AABBColliderComponent(4,5));
 	addEntity(m_circle1);
 
 	// Set up circle 2

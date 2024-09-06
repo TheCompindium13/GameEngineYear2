@@ -6,10 +6,12 @@ namespace GamePhysics
 {
 	class AABBColliderComponent : public ColliderComponent
 	{
-		AABBColliderComponent(float width, float height) : ColliderComponent() { m_width = width, m_height = height; }
+	public:
+		AABBColliderComponent(float width, float height);
+
 		/// <summary>
-        /// The width of the collider
-        /// </summary>
+		/// The width of the collider
+		/// </summary>
 		float getWidth() { return m_width; }
 		/// <summary>
 		/// The height of the collider
@@ -36,6 +38,8 @@ namespace GamePhysics
 		/// </summary>
 		float getBottom();
 
+		void draw() override;
+		
 
 		GamePhysics::Collision* checkCollisionCircle(CircleColliderComponent* other) override;
 		GamePhysics::Collision* checkCollisionAABB(AABBColliderComponent* other) override;
