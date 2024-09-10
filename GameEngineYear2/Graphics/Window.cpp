@@ -22,7 +22,9 @@ void Graphics::Window::setTargetFrameRate(int fps)
 
 void Graphics::Window::open()
 {
+
 	RAYLIB_H::InitWindow(m_width, m_height, m_title);
+	RAYLIB_H::SetWindowMonitor(1);
 }
 
 void Graphics::Window::beginDrawing()

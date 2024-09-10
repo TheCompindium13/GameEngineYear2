@@ -151,6 +151,7 @@
     <ClCompile Include="Physics\AABBColliderComponent.cpp" />
     <ClCompile Include="Physics\CircleColliderComponent.cpp" />
     <ClCompile Include="Physics\ColliderComponent.cpp" />
+    <ClCompile Include="Physics\RigidBodyComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Physics\AABBColliderComponent.h" />
     <ClInclude Include="Physics\CircleColliderComponent.h" />
     <ClInclude Include="Physics\ColliderComponent.h" />
+    <ClInclude Include="Physics\RigidBodyComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

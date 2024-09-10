@@ -1,6 +1,7 @@
 #include "ColliderComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/Scene.h"
+#include "raylib.h"
 
 void GamePhysics::ColliderComponent::start()
 {
@@ -22,7 +23,14 @@ GamePhysics::Collision* GamePhysics::ColliderComponent::checkCollision(ColliderC
 
 void GamePhysics::ColliderComponent::onCollisionEnter(GamePhysics::Collision* other)
 {
-	m_color = 0xFF0000FF;
+	if (getColliderType() == AABB)
+	{
+		m_color = 0x00000000;
+	}
+	else
+	{
+		m_color = 0xFF0000FF;
+	}
 }
 
 void GamePhysics::ColliderComponent::update(double deltaTime)

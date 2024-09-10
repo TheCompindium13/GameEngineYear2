@@ -66,7 +66,7 @@ GamePhysics::Collision* GamePhysics::CircleColliderComponent::checkCollisionAABB
     float distanceFromClosestPoint = (circlePos - closestPoint).getMagnitude();
 
     // Check for collision
-    float circleRadius = getRadius();  // Assuming getRadius() returns the radius of the circle
+    float circleRadius = getRadius();
     if (distanceFromClosestPoint <= circleRadius)
     {
         // Set collision data
@@ -93,4 +93,5 @@ void GamePhysics::CircleColliderComponent::draw()
     
     RAYLIB_H::DrawCircleLines(position.x, position.y, getRadius(), GetColor(getColor()));
 
+    
 }
