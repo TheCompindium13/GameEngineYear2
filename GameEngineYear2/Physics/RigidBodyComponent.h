@@ -20,8 +20,12 @@ namespace GamePhysics
 		void applyForceToEntity(RigidBodyComponent* rigidbody, GameMath::Vector2 force);
 
 		void fixedUpdate(float fixedDeltaTime) override;
+
+		void resolveCollision(GamePhysics::Collision* collisiondata);
 	private:
 		GameMath::Vector2 m_velocity;
+		GameMath::Vector2 m_position;
+		RigidBodyComponent* otherRigidBody;
 		float m_mass = 1;
 		float m_gravity = 9.81f;
 	};
