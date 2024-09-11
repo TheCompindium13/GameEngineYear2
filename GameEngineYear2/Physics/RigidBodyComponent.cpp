@@ -26,8 +26,29 @@ void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
 
 void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* collisiondata)
 {
-	GameMath::Vector2 relativeVelocity = getVelocity() - collisiondata->collider->getRigidBody()->getVelocity();
-	float normalVelocity = relativeVelocity.dotProduct(relativeVelocity, collisiondata->normal);
+    // Get the colliding rigid body
+    RigidBodyComponent* otherBody = collisiondata->collider->getRigidBody();
+    if (!otherBody) return;
+
+    // Compute relative velocity
+    GameMath::Vector2 relativeVelocity = getVelocity() - otherBody->getVelocity();
+    float normalVelocity = relativeVelocity.dotProduct(relativeVelocity, collisiondata->normal);
+
+    // Calculate the coefficient of restitution (bounciness)
+    float restitution = 0.5f; // This is an example value; it should be adjustable based on your needs
+
+    // Calculate the impulse scalar
+    float massSum = getMass() + otherBody->getMass();
+    if (massSum == 0) return; // Avoid division by zero
+
+    float impulseScalar = -(1 + restitution) * normalVelocity / massSum;
+
+    // Calculate impulse vector
+    GameMath::Vector2 impulse = impulseScalar * collisiondata->normal;
+
+    // Apply impulse to both bodies
+    applyForce(impulse / getMass());
+    otherBody->applyForce(impulse / otherBody->getMass());
 
 
 
