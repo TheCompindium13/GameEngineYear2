@@ -7,6 +7,7 @@ namespace GamePhysics
 	class RigidBodyComponent : public GameEngine::Component
 	{
 	public:
+		RigidBodyComponent();
 		GameMath::Vector2 getVelocity() { return m_velocity; }
 		void setVelocity(GameMath::Vector2 velocity) { m_velocity = velocity; }
 
@@ -25,7 +26,6 @@ namespace GamePhysics
 	private:
 		GameMath::Vector2 m_velocity;
 		GameMath::Vector2 m_position;
-		RigidBodyComponent* otherRigidBody;
 		float m_mass = 1;
 		float m_gravity = 9.81f;
 	};

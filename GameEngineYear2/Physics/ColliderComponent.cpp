@@ -1,7 +1,6 @@
 #include "ColliderComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/Scene.h"
-#include "raylib.h"
 
 void GamePhysics::ColliderComponent::start()
 {

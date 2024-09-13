@@ -33,49 +33,144 @@ float GamePhysics::AABBColliderComponent::getBottom()
 
 void GamePhysics::AABBColliderComponent::draw()
 {
-	GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
+    // Get the global position of the AABB center
+    GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
 
-	RAYLIB_H::DrawRectangleLines(position.x,position.y, getWidth(),getHeight(), GetColor(getColor()));
+    // Calculate the top-left corner of the AABB
+    float halfWidth = getWidth() / 2;
+    float halfHeight = getHeight() / 2;
+
+    float topLeftX = position.x - halfWidth;
+    float topLeftY = position.y - halfHeight;
+
+    // Draw the rectangle lines using Raylib
+    RAYLIB_H::DrawRectangleLines(topLeftX, topLeftY, getWidth(), getHeight(), GetColor(getColor()));
 }
 
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle(CircleColliderComponent* other)
 {
-	if (other->getOwner() == getOwner())
-		return nullptr;
-	return other->checkCollisionAABB(this);
+    if (other->getOwner() == getOwner())
+        return nullptr;
+
+    GamePhysics::Collision* collisionData = new Collision();
+
+    // Get the positions and dimensions
+    GameMath::Vector2 aabbPos = getOwner()->getTransform()->getGlobalPosition();
+    GameMath::Vector2 circlePos = other->getOwner()->getTransform()->getGlobalPosition();
+
+    float aabbHalfWidth = getWidth() / 2;
+    float aabbHalfHeight = getHeight() / 2;
+    float circleRadius = other->getRadius();
+
+    // Calculate the closest point on the AABB to the circle
+    float closestX = std::max(aabbPos.x - aabbHalfWidth, std::min(circlePos.x, aabbPos.x + aabbHalfWidth));
+    float closestY = std::max(aabbPos.y - aabbHalfHeight, std::min(circlePos.y, aabbPos.y + aabbHalfHeight));
+
+    // Vector from circle center to closest point
+    float deltaX = circlePos.x - closestX;
+    float deltaY = circlePos.y - closestY;
+
+    // Check if the circle is colliding with the AABB
+    float distanceSquared = deltaX * deltaX + deltaY * deltaY;
+    if (distanceSquared <= circleRadius * circleRadius)
+    {
+        // Collision detected
+
+        // Set collision data
+        float distance = sqrtf(distanceSquared);
+        collisionData->normal = GameMath::Vector2(deltaX / distance, deltaY / distance);  // Normal pointing from circle to AABB
+        collisionData->penetrationDistance = circleRadius - sqrtf(distanceSquared);  // Depth of penetration
+
+        // You might also want to set additional data such as the collision point
+        collisionData->contactPoint = GameMath::Vector2(
+            closestX + collisionData->normal.x * circleRadius,
+            closestY + collisionData->normal.y * circleRadius
+        );
+
+        return collisionData;
+    }
+
+    // No collision
+    delete collisionData;  // Clean up unused collision data
+    return nullptr;
 }
 
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(AABBColliderComponent* other)
 {
-	if (other->getOwner() == getOwner())
-		return nullptr;
-	GamePhysics::Collision* collisionData = new Collision();
+    if (other->getOwner() == getOwner())
+        return nullptr;
 
-	if (other->getLeft() <= getRight() &&
-		other->getTop() <= getBottom() &&
-		getLeft() <= other->getRight() &&
-		getTop() <= other->getBottom())
-	{
+    GamePhysics::Collision* collisionData = new Collision();
 
-		//find collision normal
-		int left = abs(other->getRight() - getLeft());
-		int right = abs(other->getLeft() - getRight());
-		int top = abs(other->getBottom() - getTop());
-		int bottom = abs(getBottom() - other->getTop());
-		int arr[] = { left, right, top, bottom };
+    // Get the positions and dimensions of both AABBs
+    GameMath::Vector2 pos1 = getOwner()->getTransform()->getGlobalPosition();
+    GameMath::Vector2 pos2 = other->getOwner()->getTransform()->getGlobalPosition();
 
-		std::pair<int*, int*> minMax = std::minmax_element(std::begin(arr), std::end(arr));
-		int min = *(minMax.first);
-		if (min == left)
-			setCollisionNormal({ -1,0 });
-		else if (min == right)
-			setCollisionNormal({ 1,0 });
-		else if (min == top)
-			setCollisionNormal({ 0,-1 });
-		else if (min == bottom)
-			setCollisionNormal({ 0, 1 });
+    float halfWidth1 = getWidth() / 2;
+    float halfHeight1 = getHeight() / 2;
+    float halfWidth2 = other->getWidth() / 2;
+    float halfHeight2 = other->getHeight() / 2;
 
+    // Calculate the min and max coordinates of both AABBs
+    float left1 = pos1.x - halfWidth1;
+    float right1 = pos1.x + halfWidth1;
+    float top1 = pos1.y - halfHeight1;
+    float bottom1 = pos1.y + halfHeight1;
 
-	}
-	return collisionData;
+    float left2 = pos2.x - halfWidth2;
+    float right2 = pos2.x + halfWidth2;
+    float top2 = pos2.y - halfHeight2;
+    float bottom2 = pos2.y + halfHeight2;
+
+    // Calculate the overlap in x and y directions
+    float overlapX = ((right1 < right2) ? right1 : right2) - ((left1 > left2) ? left1 : left2);
+    float overlapY = ((bottom1 < bottom2) ? bottom1 : bottom2) - ((top1 > top2) ? top1 : top2);
+
+    // Check for overlap
+    if (overlapX > 0 && overlapY > 0)
+    {
+        // Collision detected
+
+        // Determine the penetration distance and normal
+        if (overlapX < overlapY)
+        {
+            if (right1 < right2)
+            {
+                // Normal vector pointing from AABB1 to AABB2
+                collisionData->normal = GameMath::Vector2(1, 0);
+            }
+            else
+            {
+                // Normal vector pointing from AABB1 to AABB2
+                collisionData->normal = GameMath::Vector2(-1, 0);
+            }
+            collisionData->penetrationDistance = overlapX;
+        }
+        else
+        {
+            if (bottom1 < bottom2)
+            {
+                // Normal vector pointing from AABB1 to AABB2
+                collisionData->normal = GameMath::Vector2(0, 1);
+            }
+            else
+            {
+                // Normal vector pointing from AABB1 to AABB2
+                collisionData->normal = GameMath::Vector2(0, -1);
+            }
+            collisionData->penetrationDistance = overlapY;
+        }
+
+        // Calculate the contact point (simple average of the two AABB positions)
+        collisionData->contactPoint = GameMath::Vector2(
+            ((left1 > left2) ? left1 : left2) + collisionData->normal.x * collisionData->penetrationDistance / 2,
+            ((top1 > top2) ? top1 : top2) + collisionData->normal.y * collisionData->penetrationDistance / 2
+        );
+
+        return collisionData;
+    }
+
+    // No collision
+    delete collisionData;  // Clean up unused collision data
+    return nullptr;
 }

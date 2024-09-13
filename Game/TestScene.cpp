@@ -12,10 +12,10 @@ void TestScene::onStart()
 	m_circle1 = new GameEngine::Entity();
 	m_circle1->getTransform()->setLocalScale({ 40,40 });
 	m_circle1->getTransform()->setLocalPosition({ 100,100 });
-	//m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	//m_circle1->addComponent(new GamePhysics::AABBColliderComponent(4,5));
-	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
-	m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
+	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_circle1->addComponent(new GamePhysics::AABBColliderComponent(50,50));
+	//m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
+	//m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
 	m_circle1->addComponent(new GamePhysics::RigidBodyComponent());
 
 	addEntity(m_circle1);
@@ -33,6 +33,8 @@ void TestScene::onStart()
 	m_floor->getTransform()->setLocalScale({ 1000,100 });
 	m_floor->getTransform()->setLocalPosition({ 400,750 });
 	m_floor->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_floor->addComponent(new GamePhysics::AABBColliderComponent(1000, 125));
+
 	addEntity(m_floor);
 
 }
