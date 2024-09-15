@@ -1,12 +1,12 @@
 #pragma once
 #include "Engine/Component.h"
 #include "Math/Vector2.h"
-
+#include "RigidBodyComponent.h"
 namespace GamePhysics
 {
 	class CircleColliderComponent;
 	class AABBColliderComponent;
-	class RigidBodyComponent;
+
 
 	class ColliderComponent : public GameEngine::Component
 	{
@@ -43,7 +43,7 @@ namespace GamePhysics
 		bool m_isTrigger;
 		ColliderType m_colliderType;
 		unsigned int m_color = 0x00FF00FF;
-		RigidBodyComponent* m_rigidBody;
+		RigidBodyComponent* m_rigidBody = new GamePhysics::RigidBodyComponent();
 
 
 	};

@@ -30,7 +30,7 @@ void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
 void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* collisiondata)
 {
     // Check if collisiondata and collider are valid
-    //if (!collisiondata || !collisiondata->collider) return;
+    if (!collisiondata || !collisiondata->collider) return;
 
     // Get the colliding rigid body from the other entity
     RigidBodyComponent* otherBody = collisiondata->collider->getRigidBody();

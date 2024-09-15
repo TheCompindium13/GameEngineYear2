@@ -90,9 +90,8 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle
         return collisionData;
     }
 
-    // No collision
-    delete collisionData;  // Clean up unused collision data
-    return nullptr;
+
+    return collisionData;
 }
 
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(AABBColliderComponent* other)
@@ -169,8 +168,5 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
 
         return collisionData;
     }
-
-    // No collision
-    delete collisionData;  // Clean up unused collision data
-    return nullptr;
+    return collisionData;
 }
