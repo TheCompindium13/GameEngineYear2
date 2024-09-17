@@ -6,24 +6,28 @@
 #include "Physics/AABBColliderComponent.h"
 #include "Physics/RigidBodyComponent.h"
 #include "chrono"
+
 void TestScene::onStart()
 {
+	// Set up floor
 	m_floor = new GameEngine::Entity();
 	m_floor->getTransform()->setLocalScale({ 1000,100 });
 	m_floor->getTransform()->setLocalPosition({ 400,750 });
 	m_floor->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
 	m_floor->addComponent(new GamePhysics::AABBColliderComponent(1000, 125))->setRigidBody(new GamePhysics::RigidBodyComponent);
-
+	// Set up roof
 	m_roof = new GameEngine::Entity();
 	m_roof->getTransform()->setLocalScale({ 1000,100 });
 	m_roof->getTransform()->setLocalPosition({ 400,0 });
 	m_roof->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
 	m_roof->addComponent(new GamePhysics::AABBColliderComponent(1000, 125))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	// Set up left wall
 	m_leftWall = new GameEngine::Entity();
 	m_leftWall->getTransform()->setLocalScale({ 100,1000 });
 	m_leftWall->getTransform()->setLocalPosition({ 0,375 });
 	m_leftWall->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
 	m_leftWall->addComponent(new GamePhysics::AABBColliderComponent(125, 625))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	// Set up right wall
 	m_rightWall = new GameEngine::Entity();
 	m_rightWall->getTransform()->setLocalScale({ 100,1000 });
 	m_rightWall->getTransform()->setLocalPosition({ 800,375 });
@@ -55,7 +59,7 @@ void TestScene::onStart()
 	circle2RigidBody->setMass(1);
 	circle2RigidBody->setGravity(9.81f);
 
-
+	
 	
 	addEntity(m_circle2);
 

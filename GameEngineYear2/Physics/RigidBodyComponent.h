@@ -13,6 +13,7 @@ namespace GamePhysics
 
 		float getMass() { return m_mass; }
 		void setMass(float mass) { m_mass = mass; }
+		float getMaxSpeed() { return m_maxSpeed; }
 
 		float getGravity() { return m_gravity; }
 		void setGravity(float gravity) { m_gravity = gravity; }
@@ -28,5 +29,6 @@ namespace GamePhysics
 		GameMath::Vector2 m_position;
 		float m_mass = 1;
 		float m_gravity = 9.81f;
+		float m_maxSpeed = 10000;
 	};
 }

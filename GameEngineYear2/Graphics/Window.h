@@ -5,10 +5,18 @@ namespace Graphics
 	class Window
 	{
 	public:
-		Window(int width, int hight, const char* title = "Window");
+		Window( const char* title = "Window");
 
 		bool shouldClose();
+		/// <summary>
+	/// Gets how wide the application window is.
+	/// </summary>
+		static int getScreenWidth() { return m_width; }
 
+		/// <summary>
+		/// Gets how tall the application window is.
+		/// </summary>
+		static int getScreenHeight() { return m_height; }
 		int getFrameRate();
 		void setTargetFrameRate(int fps);
 
@@ -18,8 +26,8 @@ namespace Graphics
 		void close();
 
 	private:
-		int m_width;
-		int m_height;
+		static const int m_width = 800;
+		static const int m_height = 800;
 		const char* m_title;
 	};
 }

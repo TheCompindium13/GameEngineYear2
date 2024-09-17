@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "raylib.h"
-Graphics::Window::Window(int width, int height, const char* title) : m_width(width), m_height(height), m_title(title)
+Graphics::Window::Window( const char* title) : m_title(title)
 {
 
 }

@@ -2,6 +2,7 @@
 #include "Engine/TransformComponent.h"
 #include "Engine/Entity.h"
 #include "Physics/ColliderComponent.h"
+#include "Graphics/Window.h"
 
 GamePhysics::RigidBodyComponent::RigidBodyComponent() : GameEngine::Component()
 {
@@ -13,6 +14,7 @@ GamePhysics::RigidBodyComponent::RigidBodyComponent() : GameEngine::Component()
 void GamePhysics::RigidBodyComponent::applyForce(GameMath::Vector2 force)
 {
 	m_velocity = m_velocity + force / getMass();
+    
 }
 
 void GamePhysics::RigidBodyComponent::applyForceToEntity(RigidBodyComponent* rigidbody, GameMath::Vector2 force)
@@ -23,8 +25,21 @@ void GamePhysics::RigidBodyComponent::applyForceToEntity(RigidBodyComponent* rig
 
 void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
 {
+
 	GameMath::Vector2 position = getOwner()->getTransform()->getLocalPosition();
-	getOwner()->getTransform()->setLocalPosition(position + m_velocity * fixedDeltaTime);
+    GameMath::Vector2 newPosition = position + getVelocity() * fixedDeltaTime;
+    if (newPosition.x > Graphics::Window::getScreenWidth()-100)
+        newPosition.x = 0;
+        
+    else if (newPosition.x < 0)
+        newPosition.x = newPosition.x / 4;
+
+    if (newPosition.y > Graphics::Window::getScreenHeight() - 100)
+        newPosition.y = 0;
+
+    else if (newPosition.y < 0)
+        newPosition.y = newPosition.y/4;
+	getOwner()->getTransform()->setLocalPosition(newPosition);
 
 	GameMath::Vector2 gravity = { 0, getGravity() };
 	applyForce(gravity * getMass());

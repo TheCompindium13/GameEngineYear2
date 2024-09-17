@@ -16,7 +16,7 @@ void GameEngine::Engine::run()
 	double deltaTime = 0;
 	double accumulatedTime = 0;
 
-	Graphics::Window window = Graphics::Window(800, 800, "Test Application");
+	Graphics::Window window = Graphics::Window( "Test Application");
 	window.open();
 	window.setTargetFrameRate(60);
 
