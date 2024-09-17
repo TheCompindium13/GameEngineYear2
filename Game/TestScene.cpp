@@ -18,12 +18,17 @@ void TestScene::onStart()
 	m_roof->getTransform()->setLocalScale({ 1000,100 });
 	m_roof->getTransform()->setLocalPosition({ 400,0 });
 	m_roof->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	m_roof->addComponent(new GamePhysics::AABBColliderComponent(1000, 150))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	m_roof->addComponent(new GamePhysics::AABBColliderComponent(1000, 125))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	m_leftWall = new GameEngine::Entity();
 	m_leftWall->getTransform()->setLocalScale({ 100,1000 });
-	m_leftWall->getTransform()->setLocalPosition({ 0,400 });
+	m_leftWall->getTransform()->setLocalPosition({ 0,375 });
 	m_leftWall->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	m_leftWall->addComponent(new GamePhysics::AABBColliderComponent(100, 1))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	m_leftWall->addComponent(new GamePhysics::AABBColliderComponent(125, 625))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	m_rightWall = new GameEngine::Entity();
+	m_rightWall->getTransform()->setLocalScale({ 100,1000 });
+	m_rightWall->getTransform()->setLocalPosition({ 800,375 });
+	m_rightWall->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_rightWall->addComponent(new GamePhysics::AABBColliderComponent(125, 625))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	// Set up circle 1
 	m_circle1 = new GameEngine::Entity();
 	m_circle1->getTransform()->setLocalScale({ 40,40 });
@@ -58,6 +63,8 @@ void TestScene::onStart()
 	addEntity(m_floor);
 	addEntity(m_roof);
 	addEntity(m_leftWall);
+	addEntity(m_rightWall);
+
 }
 
 void TestScene::onUpdate(double deltaTime)
