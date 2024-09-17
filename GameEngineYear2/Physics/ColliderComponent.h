@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/Component.h"
 #include "Math/Vector2.h"
-#include "RigidBodyComponent.h"
+#include "Physics/RigidBodyComponent.h"
 namespace GamePhysics
 {
 	class CircleColliderComponent;
@@ -36,6 +36,8 @@ namespace GamePhysics
 		void setIsTrigger(bool isTrigger) { m_isTrigger = isTrigger; }
 
 		RigidBodyComponent* getRigidBody() { return m_rigidBody; }
+		void setRigidBody(RigidBodyComponent* rigidBody) { m_rigidBody = rigidBody; }
+
 
 		void setCollisionNormal(GameMath::Vector2 normal) { normal = normal; }
 
@@ -43,7 +45,7 @@ namespace GamePhysics
 		bool m_isTrigger;
 		ColliderType m_colliderType;
 		unsigned int m_color = 0x00FF00FF;
-		RigidBodyComponent* m_rigidBody = new GamePhysics::RigidBodyComponent();
+		RigidBodyComponent* m_rigidBody;
 
 
 	};
@@ -52,7 +54,7 @@ namespace GamePhysics
 	{
 	public:
 		GameMath::Vector2 normal;
-		ColliderComponent* collider;
+		ColliderComponent* collider = nullptr;
 		GameMath::Vector2 contactPoint;
 		float penetrationDistance;
 

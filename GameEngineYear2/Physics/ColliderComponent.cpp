@@ -5,6 +5,7 @@
 void GamePhysics::ColliderComponent::start()
 {
 	GameEngine::Engine::getCurrentScene()->addActiveCollider(this);
+	
 }
 
 GamePhysics::Collision* GamePhysics::ColliderComponent::checkCollision(ColliderComponent* other)

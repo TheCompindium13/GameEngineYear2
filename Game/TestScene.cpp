@@ -8,35 +8,56 @@
 #include "chrono"
 void TestScene::onStart()
 {
+	m_floor = new GameEngine::Entity();
+	m_floor->getTransform()->setLocalScale({ 1000,100 });
+	m_floor->getTransform()->setLocalPosition({ 400,750 });
+	m_floor->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_floor->addComponent(new GamePhysics::AABBColliderComponent(1000, 125))->setRigidBody(new GamePhysics::RigidBodyComponent);
+
+	m_roof = new GameEngine::Entity();
+	m_roof->getTransform()->setLocalScale({ 1000,100 });
+	m_roof->getTransform()->setLocalPosition({ 400,0 });
+	m_roof->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_roof->addComponent(new GamePhysics::AABBColliderComponent(1000, 150))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	m_leftWall = new GameEngine::Entity();
+	m_leftWall->getTransform()->setLocalScale({ 100,1000 });
+	m_leftWall->getTransform()->setLocalPosition({ 0,400 });
+	m_leftWall->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	m_leftWall->addComponent(new GamePhysics::AABBColliderComponent(100, 1))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	// Set up circle 1
 	m_circle1 = new GameEngine::Entity();
 	m_circle1->getTransform()->setLocalScale({ 40,40 });
 	m_circle1->getTransform()->setLocalPosition({ 100,100 });
 	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	m_circle1->addComponent(new GamePhysics::AABBColliderComponent(50,50));
+	GamePhysics::RigidBodyComponent* circle1RigidBody = new GamePhysics::RigidBodyComponent();
+	m_circle1->addComponent(circle1RigidBody);
+	m_circle1->addComponent(new GamePhysics::AABBColliderComponent(50,50))->setRigidBody(circle1RigidBody);
 	//m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
 	//m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
-	m_circle1->addComponent(new GamePhysics::RigidBodyComponent());
-
-	addEntity(m_circle1);
+	circle1RigidBody->setEnabled(true);
+	circle1RigidBody->setMass(1);
+	circle1RigidBody->setGravity(9.81f);
 
 	// Set up circle 2
 	m_circle2 = new GameEngine::Entity();
 	m_circle2->getTransform()->setLocalScale({ 40,40 });
-	m_circle2->getTransform()->setLocalPosition({ 600,100 });
+	m_circle2->getTransform()->setLocalPosition({ 600,160 });
 	m_circle2->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
-	m_circle2->addComponent(new GamePhysics::CircleColliderComponent(50));
-	m_circle2->addComponent(new GamePhysics::RigidBodyComponent());
+	GamePhysics::RigidBodyComponent* circle2RigidBody = new GamePhysics::RigidBodyComponent();
+	m_circle2->addComponent(circle2RigidBody);
+	m_circle2->addComponent(new GamePhysics::CircleColliderComponent(50))->setRigidBody(circle2RigidBody);
+	circle2RigidBody->setEnabled(true);
+	circle2RigidBody->setMass(1);
+	circle2RigidBody->setGravity(9.81f);
+
+
+	
 	addEntity(m_circle2);
 
-	m_floor = new GameEngine::Entity();
-	m_floor->getTransform()->setLocalScale({ 1000,100 });
-	m_floor->getTransform()->setLocalPosition({ 400,750 });
-	m_floor->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	m_floor->addComponent(new GamePhysics::AABBColliderComponent(1000, 125));
-
+	addEntity(m_circle1);
 	addEntity(m_floor);
-
+	addEntity(m_roof);
+	addEntity(m_leftWall);
 }
 
 void TestScene::onUpdate(double deltaTime)

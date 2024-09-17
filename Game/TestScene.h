@@ -13,5 +13,8 @@ private:
 	GameEngine::Entity* m_circle1;
 	GameEngine::Entity* m_circle2;
 	GameEngine::Entity* m_floor;
+	GameEngine::Entity* m_roof;
+	GameEngine::Entity* m_leftWall;
+	GameEngine::Entity* m_rightWall;
 	float m_accumulatedTime = 0;
 };

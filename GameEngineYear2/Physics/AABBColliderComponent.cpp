@@ -9,6 +9,7 @@ GamePhysics::AABBColliderComponent::AABBColliderComponent(float width, float hei
 	setColliderType(AABB);
 	m_width = width;
 	m_height = height;
+    
 }
 
 float GamePhysics::AABBColliderComponent::getLeft()
@@ -86,8 +87,14 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle
             closestX + collisionData->normal.x * circleRadius,
             closestY + collisionData->normal.y * circleRadius
         );
+        collisionData->collider = other;
 
-        return collisionData;
+    }
+    else
+    {
+        // No collision
+        delete collisionData;  // Clean up unused collision data
+        return nullptr;
     }
 
 
@@ -165,8 +172,15 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
             ((left1 > left2) ? left1 : left2) + collisionData->normal.x * collisionData->penetrationDistance / 2,
             ((top1 > top2) ? top1 : top2) + collisionData->normal.y * collisionData->penetrationDistance / 2
         );
+        collisionData->collider = other;
 
-        return collisionData;
+       
+    }
+    else
+    {
+        // No collision
+        delete collisionData;  // Clean up unused collision data
+        return nullptr;
     }
     return collisionData;
 }

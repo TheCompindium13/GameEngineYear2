@@ -5,7 +5,10 @@
 
 GamePhysics::RigidBodyComponent::RigidBodyComponent() : GameEngine::Component()
 {
-    
+    setEnabled(true);
+    m_mass = 0;
+    m_gravity = 0;
+
 }
 void GamePhysics::RigidBodyComponent::applyForce(GameMath::Vector2 force)
 {
@@ -33,14 +36,20 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
     if (!collisiondata || !collisiondata->collider) return;
 
     // Get the colliding rigid body from the other entity
+    
     RigidBodyComponent* otherBody = collisiondata->collider->getRigidBody();
 
     // Check if otherBody is valid
-    if (!otherBody) return; // No collision resolution if the other body is not dynamic
+    if (!otherBody)
+    {
+        return;
+    }
+
+
 
     // Get the masses of both bodies
     float mass1 = getMass();
-    float mass2 = otherBody->getMass();
+    float mass2 = otherBody->m_mass;
 
     // If both masses are zero, both bodies are static; no resolution needed
     if (mass1 == 0 && mass2 == 0) return;
@@ -58,11 +67,12 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
             GameMath::Vector2 impulse = normal * j;
             applyForceToEntity(otherBody, impulse);
         }
-        else {
+        else 
+        {
             // Other body is static; apply impulse to this body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
-            applyForceToEntity(otherBody, impulse); // Apply negative impulse to the static body
+            applyForce( { -impulse.x, -impulse.y }); // Apply negative impulse to the static body
         }
     }
     else {
@@ -74,7 +84,9 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
         GameMath::Vector2 impulse = normal * j;
 
         // Apply impulse to both bodies
+
         applyForceToEntity(otherBody, impulse); // Apply impulse to the other body
-        applyForceToEntity(otherBody, impulse); // Apply negative impulse to this body
+        applyForceToEntity(otherBody, {-impulse.x,impulse.y}); // Apply negative impulse to this body
     }
+    
 }

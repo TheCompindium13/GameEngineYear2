@@ -72,6 +72,7 @@ void GameEngine::Entity::onCollisionEnter(GamePhysics::Collision* collision)
 {
 	for (Component* component : m_components)
 	{
+		
 		component->onCollisionEnter(collision);
 	}
 

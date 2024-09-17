@@ -24,7 +24,7 @@ void Graphics::Window::open()
 {
 
 	RAYLIB_H::InitWindow(m_width, m_height, m_title);
-	RAYLIB_H::SetWindowMonitor(1);
+	RAYLIB_H::SetWindowMonitor(2);
 }
 
 void Graphics::Window::beginDrawing()

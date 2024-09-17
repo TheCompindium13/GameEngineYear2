@@ -73,7 +73,7 @@ GamePhysics::Collision* GamePhysics::CircleColliderComponent::checkCollisionAABB
         
         collisionData->normal = (closestPoint - circlePos).normalize();  // Normal pointing from circle to AABB
         collisionData->penetrationDistance = circleRadius - distanceFromClosestPoint;  // Depth of penetration
-
+        collisionData->collider = other;
         // You might also want to set additional data such as the collision point
         collisionData->contactPoint = closestPoint;
     }
