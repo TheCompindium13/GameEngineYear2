@@ -31,9 +31,10 @@ void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
     if (newPosition.x > Graphics::Window::getScreenWidth()-100)
         newPosition.x = 0;
         
-    else if (newPosition.x < 0)
+    if (newPosition.x < 0)
     {
-        newPosition.x = position.x * 40;
+        newPosition = { 100, newPosition.y };
+
         setVelocity({ 0,0 });
     }
 
@@ -61,16 +62,13 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
     if (!collisiondata || !collisiondata->collider) return;
 
     // Get the colliding rigid body from the other entity
-    
     RigidBodyComponent* otherBody = collisiondata->collider->getRigidBody();
-    
+
     // Check if otherBody is valid
     if (!otherBody)
     {
         return;
     }
-
-
 
     // Get the masses of both bodies
     float mass1 = getMass();
@@ -83,11 +81,27 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
     GameMath::Vector2 relativeVelocity = getVelocity() - otherBody->getVelocity();
     GameMath::Vector2 normal = collisiondata->normal;
 
-    if (mass1 == 0 || mass2 == 0) {
-        // Handle the case where one of the bodies is static
+    // Adjust positions to prevent entities from being inside each other
+    float penetrationDistance = collisiondata->penetrationDistance; // Assume penetrationDepth is provided
+    if (penetrationDistance > 0)
+    {
+        GameMath::Vector2 correction = normal * (penetrationDistance / (mass1 + mass2));
+        if (mass1 != 0) 
+        {
+            getOwner()->getTransform()->setLocalPosition(getOwner()->getTransform()->getLocalPosition() - correction);
+        }
+        if (mass2 != 0) 
+        {
+            otherBody->getOwner()->getTransform()->setLocalPosition(otherBody->getOwner()->getTransform()->getLocalPosition() + correction);
+        }
+    }
+
+    // Existing collision resolution logic...
+    if (mass1 == 0 || mass2 == 0) 
+    {
+        // Handle static bodies...
         if (mass1 == 0) 
         {
-            
             // This body is static; apply impulse to the other body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
@@ -98,10 +112,11 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
             // Other body is static; apply impulse to this body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
-            applyForce( { -impulse.x, -impulse.y }); // Apply negative impulse to the static body
+            applyForce({ -impulse.x, -impulse.y }); // Apply negative impulse to the static body
         }
     }
-    else {
+    else 
+    {
         // Both bodies are dynamic
         float normalVelocity = GameMath::Vector2::dotProduct(relativeVelocity, normal);
         float massSumInverse = 1.0f / mass1 + 1.0f / mass2;
@@ -110,9 +125,8 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
         GameMath::Vector2 impulse = normal * j;
 
         // Apply impulse to both bodies
-
-        applyForceToEntity(otherBody, { -impulse.x,-impulse.y }); // Apply impulse to the other body
-        applyForce( {impulse.x,impulse.y}); // Apply negative impulse to this body
+        applyForceToEntity(otherBody, { -impulse.x, -impulse.y }); // Apply impulse to the other body
+        applyForce({ impulse.x, impulse.y }); // Apply negative impulse to this body
     }
-    
 }
+

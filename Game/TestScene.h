@@ -16,5 +16,12 @@ private:
 	GameEngine::Entity* m_roof;
 	GameEngine::Entity* m_leftWall;
 	GameEngine::Entity* m_rightWall;
+	GameEngine::Entity* m_Center;
+	GameEngine::Entity* m_Corner1;
+	GameEngine::Entity* m_Corner2;
+	GameEngine::Entity* m_Corner3;
+	GameEngine::Entity* m_Corner4;
+
+
 	float m_accumulatedTime = 0;
 };
