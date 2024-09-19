@@ -66,7 +66,7 @@ void TestScene::onStart()
 
 	addEntity(m_circle1);
 	addEntity(m_floor);
-	addEntity(m_roof);
+	//addEntity(m_roof);
 	addEntity(m_leftWall);
 	addEntity(m_rightWall);
 
