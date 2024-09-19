@@ -6,6 +6,7 @@
 #include "Physics/AABBColliderComponent.h"
 #include "Physics/RigidBodyComponent.h"
 #include "chrono"
+#include "iostream"
 
 void TestScene::onStart()
 {
@@ -36,7 +37,7 @@ void TestScene::onStart()
 	// Set up circle 1
 	m_circle1 = new GameEngine::Entity();
 	m_circle1->getTransform()->setLocalScale({ 40,40 });
-	m_circle1->getTransform()->setLocalPosition({ 100,100 });
+	m_circle1->getTransform()->setLocalPosition({ 100,160 });
 	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
 	GamePhysics::RigidBodyComponent* circle1RigidBody = new GamePhysics::RigidBodyComponent();
 	m_circle1->addComponent(circle1RigidBody);
@@ -73,5 +74,7 @@ void TestScene::onStart()
 
 void TestScene::onUpdate(double deltaTime)
 {
-	
+	GameMath::Vector2 Colliding = m_circle1->getTransform()->getLocalPosition();
+	std::cout << "x:" << Colliding.x << std::endl;
+	std::cout << "y:" << Colliding.y << std::endl;
 }

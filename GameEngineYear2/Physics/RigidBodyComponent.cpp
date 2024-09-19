@@ -26,24 +26,34 @@ void GamePhysics::RigidBodyComponent::applyForceToEntity(RigidBodyComponent* rig
 void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
 {
 
-	GameMath::Vector2 position = getOwner()->getTransform()->getLocalPosition();
+    GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
     GameMath::Vector2 newPosition = position + getVelocity() * fixedDeltaTime;
     if (newPosition.x > Graphics::Window::getScreenWidth()-100)
         newPosition.x = 0;
         
     else if (newPosition.x < 0)
-        newPosition.x = newPosition.x / 4;
+    {
+        newPosition.x = position.x * 40;
+        setVelocity({ 0,0 });
+    }
 
-    if (newPosition.y > Graphics::Window::getScreenHeight() - 100)
+
+    if (newPosition.y > Graphics::Window::getScreenHeight() - 115 || newPosition.y > Graphics::Window::getScreenHeight())
         newPosition.y = 0;
 
     else if (newPosition.y < 0)
-        newPosition.y = newPosition.y/4;
+    {
+        newPosition = {newPosition.x, 200 };
+        setVelocity({ 0,0 });
+    }
+
 	getOwner()->getTransform()->setLocalPosition(newPosition);
 
 	GameMath::Vector2 gravity = { 0, getGravity() };
 	applyForce(gravity * getMass());
 }
+
+
 
 void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* collisiondata)
 {
@@ -53,7 +63,7 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
     // Get the colliding rigid body from the other entity
     
     RigidBodyComponent* otherBody = collisiondata->collider->getRigidBody();
-
+    
     // Check if otherBody is valid
     if (!otherBody)
     {
@@ -77,6 +87,7 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
         // Handle the case where one of the bodies is static
         if (mass1 == 0) 
         {
+            
             // This body is static; apply impulse to the other body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
@@ -100,8 +111,8 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
 
         // Apply impulse to both bodies
 
-        applyForceToEntity(otherBody, impulse); // Apply impulse to the other body
-        applyForceToEntity(otherBody, {-impulse.x,impulse.y}); // Apply negative impulse to this body
+        applyForceToEntity(otherBody, { -impulse.x,-impulse.y }); // Apply impulse to the other body
+        applyForce( {impulse.x,impulse.y}); // Apply negative impulse to this body
     }
     
 }
