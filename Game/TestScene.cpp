@@ -42,18 +42,18 @@ void TestScene::onStart()
 	m_rightWall->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
 	m_rightWall->addComponent(new GamePhysics::AABBColliderComponent(125, 625))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	// Set up circle 1
-	//m_circle1 = new GameEngine::Entity();
-	//m_circle1->getTransform()->setLocalScale({ 40,40 });
-	//m_circle1->getTransform()->setLocalPosition({ 245,160 });
-	//m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
-	//GamePhysics::RigidBodyComponent* circle1RigidBody = new GamePhysics::RigidBodyComponent();
-	//m_circle1->addComponent(circle1RigidBody);
-	//m_circle1->addComponent(new GamePhysics::AABBColliderComponent(50,50))->setRigidBody(circle1RigidBody);
-	////m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
-	////m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
-	//circle1RigidBody->setEnabled(true);
-	//circle1RigidBody->setMass(1);
-	//circle1RigidBody->setGravity(9.81);
+	m_circle1 = new GameEngine::Entity();
+	m_circle1->getTransform()->setLocalScale({ 40,40 });
+	m_circle1->getTransform()->setLocalPosition({ 245,160 });
+	m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::BOX);
+	GamePhysics::RigidBodyComponent* circle1RigidBody = new GamePhysics::RigidBodyComponent();
+	m_circle1->addComponent(circle1RigidBody);
+	m_circle1->addComponent(new GamePhysics::AABBColliderComponent(70,50))->setRigidBody(circle1RigidBody);
+	//m_circle1->addComponent<Graphics::ShapeComponent>()->setShapeType(Graphics::CIRCLE);
+	//m_circle1->addComponent(new GamePhysics::CircleColliderComponent(50));
+	circle1RigidBody->setEnabled(true);
+	circle1RigidBody->setMass(1);
+	circle1RigidBody->setGravity(9.81);
 
 	// Set up circle 2
 	m_circle2 = new GameEngine::Entity();
@@ -72,7 +72,7 @@ void TestScene::onStart()
 	m_Center->getTransform()->setLocalScale({ 40,40 });
 	m_Center->getTransform()->setLocalPosition({ 400,400 });
 
-	m_Center->addComponent(new GamePhysics::CircleColliderComponent(100))->setRigidBody(new GamePhysics::RigidBodyComponent);
+	m_Center->addComponent(new GamePhysics::CircleColliderComponent(125))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	
 	// Set up corner 1
 	m_Corner1 = new GameEngine::Entity();
@@ -83,7 +83,7 @@ void TestScene::onStart()
 	m_Corner1->addComponent(new GamePhysics::CircleColliderComponent(25))->setRigidBody(new GamePhysics::RigidBodyComponent);
 	addEntity(m_circle2);
 	addEntity(m_Center);
-	//addEntity(m_circle1);
+	addEntity(m_circle1);
 	addEntity(m_floor);
 	addEntity(m_roof);
 	//addEntity(m_Corner1);
@@ -97,4 +97,5 @@ void TestScene::onUpdate(double deltaTime)
 	GameMath::Vector2 Colliding = m_circle2->getTransform()->getLocalPosition();
 	std::cout << "x:" << Colliding.x << std::endl;
 	std::cout << "y:" << Colliding.y << std::endl;
+	
 }

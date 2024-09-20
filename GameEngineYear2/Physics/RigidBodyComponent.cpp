@@ -3,7 +3,7 @@
 #include "Engine/Entity.h"
 #include "Physics/ColliderComponent.h"
 #include "Graphics/Window.h"
-
+#include "iostream"
 GamePhysics::RigidBodyComponent::RigidBodyComponent() : GameEngine::Component()
 {
     setEnabled(true);
@@ -23,33 +23,57 @@ void GamePhysics::RigidBodyComponent::applyForceToEntity(RigidBodyComponent* rig
 	rigidbody->applyForce(force );
 }
 
+float GamePhysics::RigidBodyComponent::random()
+{
+    float x;
+    for (size_t i = 0; i < 1; i++)
+    {
+         x = rand() % 600;
+    }
+    return x;
+}
+
 void GamePhysics::RigidBodyComponent::fixedUpdate(float fixedDeltaTime)
 {
 
-    GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
+    GameMath::Vector2 position = getOwner()->getTransform()->getLocalPosition();
     GameMath::Vector2 newPosition = position + getVelocity() * fixedDeltaTime;
-    if (newPosition.x > Graphics::Window::getScreenWidth()-100)
-        newPosition.x = 0;
-        
-    if (newPosition.x < 0)
+    if (newPosition.x >= Graphics::Window::getScreenWidth() - 100)
     {
+        setVelocity({ 0,0 });
+        newPosition.x = 100;
+
+    }
+        
+        
+    else if (newPosition.x <= 0)
+    {
+        setVelocity({ 0,0 });
         newPosition = { 100, newPosition.y };
 
-        setVelocity({ 0,0 });
     }
 
 
-    if (newPosition.y > Graphics::Window::getScreenHeight() - 115 || newPosition.y > Graphics::Window::getScreenHeight())
-        newPosition.y = 0;
-
-    else if (newPosition.y < 0)
+    if (newPosition.y >= Graphics::Window::getScreenHeight() - 115 || newPosition.y > Graphics::Window::getScreenHeight())
     {
-        newPosition = {newPosition.x, 200 };
         setVelocity({ 0,0 });
+        newPosition.y = 300;
     }
-
+    else if (newPosition.y <= 0)
+    {
+        setVelocity({ 0,0 });
+        newPosition = {newPosition.x, 200 };
+    }
+    bool x = std::isnan(getVelocity().x);
+    if (x == true)
+    {
+        setVelocity({ 0,0 });
+        newPosition = { (float)(rand() % 800 - 275),(float)(rand() % 800 - 275) };
+        
+    }
+    std::cout << "Velocity X:" << getVelocity().x << std::endl;
+    std::cout << "Velocity Y:" << getVelocity().y << std::endl;
 	getOwner()->getTransform()->setLocalPosition(newPosition);
-
 	GameMath::Vector2 gravity = { 0, getGravity() };
 	applyForce(gravity * getMass());
 }
@@ -82,7 +106,7 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
     GameMath::Vector2 normal = collisiondata->normal;
 
     // Adjust positions to prevent entities from being inside each other
-    float penetrationDistance = collisiondata->penetrationDistance; // Assume penetrationDepth is provided
+    float penetrationDistance = collisiondata->penetrationDistance; // Assume penetrationDistance is provided
     if (penetrationDistance > 0)
     {
         GameMath::Vector2 correction = normal * (penetrationDistance / (mass1 + mass2));
@@ -96,20 +120,20 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
         }
     }
 
-    // Existing collision resolution logic...
+    // Existing collision resolution logic
     if (mass1 == 0 || mass2 == 0) 
     {
-        // Handle static bodies...
+        // Handle static bodies
         if (mass1 == 0) 
         {
-            // This body is static; apply impulse to the other body
+            // This body is static, apply impulse to the other body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
             applyForceToEntity(otherBody, impulse);
         }
         else 
         {
-            // Other body is static; apply impulse to this body
+            // Other body is static, apply impulse to this body
             float j = 2 * GameMath::Vector2::dotProduct(relativeVelocity, normal);
             GameMath::Vector2 impulse = normal * j;
             applyForce({ -impulse.x, -impulse.y }); // Apply negative impulse to the static body
@@ -125,8 +149,9 @@ void GamePhysics::RigidBodyComponent::resolveCollision(GamePhysics::Collision* c
         GameMath::Vector2 impulse = normal * j;
 
         // Apply impulse to both bodies
-        applyForceToEntity(otherBody, { -impulse.x, -impulse.y }); // Apply impulse to the other body
-        applyForce({ impulse.x, impulse.y }); // Apply negative impulse to this body
+        applyForceToEntity(otherBody, { impulse.x, impulse.y }); // Apply impulse to the other body
+        applyForce({ -impulse.x, -impulse.y }); // Apply negative impulse to this body
     }
+    
 }
 

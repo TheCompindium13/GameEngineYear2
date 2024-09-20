@@ -20,7 +20,7 @@ namespace GamePhysics
 
 		void applyForce(GameMath::Vector2 force);
 		void applyForceToEntity(RigidBodyComponent* rigidbody, GameMath::Vector2 force);
-
+		float random();
 		void fixedUpdate(float fixedDeltaTime) override;
 		void resolveCollision(GamePhysics::Collision* collisiondata);
 	private:
