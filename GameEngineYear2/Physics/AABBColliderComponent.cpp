@@ -3,13 +3,15 @@
 #include "CircleColliderComponent.h"
 #include <algorithm>
 #include <raylib.h>
+#include <cassert>
+#include <iostream>
 
 GamePhysics::AABBColliderComponent::AABBColliderComponent(float width, float height) : ColliderComponent()
 {
-	setColliderType(AABB);
-	m_width = width;
-	m_height = height;
-    
+    setColliderType(AABB);
+    assert(width > 0 && height > 0);  // Ensure dimensions are positive
+    m_width = width;
+    m_height = height;
 }
 
 float GamePhysics::AABBColliderComponent::getLeft()
@@ -73,22 +75,25 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle
 
     // Check if the circle is colliding with the AABB
     float distanceSquared = deltaX * deltaX + deltaY * deltaY;
+    float distance = sqrtf(distanceSquared);
+
+    if (distance < 1e-5f) {
+        // Avoid division by zero; set a default normal direction
+        collisionData->normal = GameMath::Vector2(1, 0);
+    }
+    else {
+        collisionData->normal = GameMath::Vector2(deltaX / distance, deltaY / distance);
+    }
+
     if (distanceSquared <= circleRadius * circleRadius)
     {
         // Collision detected
-
-        // Set collision data
-        float distance = sqrtf(distanceSquared);
-        collisionData->normal = GameMath::Vector2(deltaX / distance, deltaY / distance);  // Normal pointing from circle to AABB
-        collisionData->penetrationDistance = circleRadius - sqrtf(distanceSquared);  // Depth of penetration
-
-        // You might also want to set additional data such as the collision point
+        collisionData->penetrationDistance = circleRadius - sqrtf(distanceSquared);
         collisionData->contactPoint = GameMath::Vector2(
             closestX + collisionData->normal.x * circleRadius,
             closestY + collisionData->normal.y * circleRadius
         );
         collisionData->collider = other;
-
     }
     else
     {
@@ -96,7 +101,6 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle
         delete collisionData;  // Clean up unused collision data
         return nullptr;
     }
-
 
     return collisionData;
 }
@@ -136,18 +140,14 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
     if (overlapX > 0 && overlapY > 0)
     {
         // Collision detected
-
-        // Determine the penetration distance and normal
         if (overlapX < overlapY)
         {
             if (right1 < right2)
             {
-                // Normal vector pointing from AABB1 to AABB2
                 collisionData->normal = GameMath::Vector2(1, 0);
             }
             else
             {
-                // Normal vector pointing from AABB1 to AABB2
                 collisionData->normal = GameMath::Vector2(-1, 0);
             }
             collisionData->penetrationDistance = overlapX;
@@ -156,12 +156,10 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
         {
             if (bottom1 < bottom2)
             {
-                // Normal vector pointing from AABB1 to AABB2
                 collisionData->normal = GameMath::Vector2(0, 1);
             }
             else
             {
-                // Normal vector pointing from AABB1 to AABB2
                 collisionData->normal = GameMath::Vector2(0, -1);
             }
             collisionData->penetrationDistance = overlapY;
@@ -169,12 +167,10 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
 
         // Calculate the contact point (simple average of the two AABB positions)
         collisionData->contactPoint = GameMath::Vector2(
-            ((left1 > left2) ? left1 : left2) + collisionData->normal.x * collisionData->penetrationDistance / 2,
-            ((top1 > top2) ? top1 : top2) + collisionData->normal.y * collisionData->penetrationDistance / 2
+            left1 + (collisionData->normal.x * collisionData->penetrationDistance / 2),
+            top1 + (collisionData->normal.y * collisionData->penetrationDistance / 2)
         );
         collisionData->collider = other;
-
-       
     }
     else
     {
@@ -182,5 +178,6 @@ GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionAABB(A
         delete collisionData;  // Clean up unused collision data
         return nullptr;
     }
+
     return collisionData;
 }

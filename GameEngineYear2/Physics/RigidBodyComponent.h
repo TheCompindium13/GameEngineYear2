@@ -21,11 +21,13 @@ namespace GamePhysics
 		void applyForce(GameMath::Vector2 force);
 		void applyForceToEntity(RigidBodyComponent* rigidbody, GameMath::Vector2 force);
 		float random();
+		void clampVelocity(float maxSpeed);
 		void fixedUpdate(float fixedDeltaTime) override;
 		void resolveCollision(GamePhysics::Collision* collisiondata);
 	private:
 		GameMath::Vector2 m_velocity;
 		GameMath::Vector2 m_position;
+		float m_maxVelocity;
 		float m_mass = 1;
 		float m_gravity = 9.81f;
 		float m_maxSpeed = 10000;
