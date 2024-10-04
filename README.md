@@ -66,4 +66,6 @@ The `Collision` structure holds information about collisions between colliders.
 ## Conclusion
 
 This physics engine provides a foundation for implementing realistic physics in 2D games, offering flexible colliders and dynamic rigid bodies. It can be easily integrated into game projects to enhance gameplay mechanics and interactions.
-
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/TheCompindium13/GameEngineYear2.git
