@@ -2,7 +2,7 @@
 #include "Engine/Entity.h"
 #include "CircleColliderComponent.h"
 #include <algorithm>
-#include <raylib.h>
+
 #include <cassert>
 #include <iostream>
 
@@ -46,8 +46,6 @@ void GamePhysics::AABBColliderComponent::draw()
     float topLeftX = position.x - halfWidth;
     float topLeftY = position.y - halfHeight;
 
-    // Draw the rectangle lines using Raylib
-    RAYLIB_H::DrawRectangleLines(topLeftX, topLeftY, getWidth(), getHeight(), GetColor(getColor()));
 }
 
 GamePhysics::Collision* GamePhysics::AABBColliderComponent::checkCollisionCircle(CircleColliderComponent* other)

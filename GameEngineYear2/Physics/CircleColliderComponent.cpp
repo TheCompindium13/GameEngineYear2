@@ -3,7 +3,6 @@
 #include "Engine/TransformComponent.h"
 #include "Math/Vector2.h"
 #include "Engine/Entity.h"
-#include <raylib.h>
 
 GamePhysics::CircleColliderComponent::CircleColliderComponent(float radius) : ColliderComponent()
 {
@@ -91,7 +90,6 @@ void GamePhysics::CircleColliderComponent::draw()
 {
     GameMath::Vector2 position = getOwner()->getTransform()->getGlobalPosition();
     
-    RAYLIB_H::DrawCircleLines(position.x, position.y, getRadius(), GetColor(getColor()));
 
     
 }
