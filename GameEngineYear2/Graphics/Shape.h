@@ -8,26 +8,34 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VertexBufferLayout.h"
-class Shape {
-private:
-    std::string id;
-    VertexArray va;
-    VertexBuffer vb;
-    IndexBuffer ib;
-    Texture texture;
-    Shader shader;
+#include "Engine/Component.h"
+namespace Graphics
+{
 
-    static std::map<std::string, Shape*> shapes;
+    class Shape : public GameEngine::Component
+    {
+    private:
+        std::string id;
+        Graphics::VertexArray va;
+        Graphics::VertexBuffer vb;
+        Graphics::IndexBuffer ib;
+        Graphics::Texture texture;
+        Graphics::Shader shader;
 
-public:
-    Shape(const std::string& id, const float* positions, const unsigned int* indices,
-        size_t vertexCount, size_t indexCount, const std::string& texturePath,
-        const std::string& shaderPath);
+        static std::map<std::string, Shape*> shapes;
 
-    ~Shape();
+    public:
+        Shape(const std::string& id, const float* positions, const unsigned int* indices,
+            size_t vertexCount, size_t indexCount, const std::string& texturePath,
+            const std::string& shaderPath);
 
-    void Draw(Renderer& renderer, float r);
+        ~Shape();
 
-    static void AddShape(const std::string& id, Shape* shape);
-    static Shape* GetShape(const std::string& id);
-};
+        void Draw(Renderer& renderer, float r);
+
+        static void AddShape(const std::string& id, Shape* shape);
+        static Shape* GetShape(const std::string& id);
+        Shader& getShader() { return shader; } // Getter method
+    };
+}
+

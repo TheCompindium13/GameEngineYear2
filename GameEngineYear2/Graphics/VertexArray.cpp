@@ -1,17 +1,19 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Renderer.h"
-VertexArray::VertexArray()
+Graphics::VertexArray::VertexArray()
 {
 	GLCall(glGenVertexArrays(1, &m_RendererID));
 }
 
-VertexArray::~VertexArray()
+Graphics::VertexArray::~VertexArray()
 {
 	GLCall(glDeleteVertexArrays(1, &m_RendererID));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& Layout)
+void Graphics::VertexArray::AddBuffer(const Graphics::VertexBuffer& vb, const VertexBufferLayout& Layout)
 {
 	Bind();
 	vb.Bind();
@@ -26,12 +28,12 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& La
 	}
 }
 
-void VertexArray::Bind() const
+void Graphics::VertexArray::Bind() const
 {
 	GLCall(glBindVertexArray(m_RendererID));
 }
 
-void VertexArray::Unbind() const
+void Graphics::VertexArray::Unbind() const
 {
 	GLCall(glBindVertexArray(0));
 

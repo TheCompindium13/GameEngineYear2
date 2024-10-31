@@ -1,13 +1,18 @@
 #pragma once
-
-class VertexBuffer
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+namespace Graphics 
 {
-private:
-	unsigned int m_RendererID;
-public:
-	VertexBuffer(const void* data, unsigned int size);
-	~VertexBuffer();
+	class VertexBuffer
+	{
+	private:
+		unsigned int m_RendererID;
+	public:
+		VertexBuffer(const void* data, unsigned int size);
+		~VertexBuffer();
 
-	void Bind() const;
-	void Unbind() const;
-};
+		void Bind() const;
+		void Unbind() const;
+	};
+
+}

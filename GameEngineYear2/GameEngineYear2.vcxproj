@@ -146,7 +146,6 @@
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\Shape.cpp" />
-    <ClCompile Include="Graphics\ShapeComponent.cpp" />
     <ClCompile Include="Graphics\Source.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\VertexArray.cpp" />
@@ -174,7 +173,6 @@
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Shape.h" />
-    <ClInclude Include="Graphics\ShapeComponent.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\VertexArray.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />

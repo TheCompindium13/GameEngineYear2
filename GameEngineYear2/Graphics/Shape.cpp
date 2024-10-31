@@ -1,9 +1,8 @@
 #include "Shape.h"
-#include "Renderer.h" // Ensure you include Renderer for GLCall
 
-std::map<std::string, Shape*> Shape::shapes;
+std::map<std::string, Graphics::Shape*> Graphics::Shape::shapes;
 
-Shape::Shape(const std::string& id, const float* positions, const unsigned int* indices,
+Graphics::Shape::Shape(const std::string& id, const float* positions, const unsigned int* indices,
     size_t vertexCount, size_t indexCount, const std::string& texturePath,
     const std::string& shaderPath)
     : id(id), vb(positions, vertexCount * 4 * sizeof(float)), ib(indices, indexCount),
@@ -21,9 +20,9 @@ Shape::Shape(const std::string& id, const float* positions, const unsigned int* 
     va.AddBuffer(vb, layout);
 }
 
-Shape::~Shape() {}
+Graphics::Shape::~Shape() {}
 
-void Shape::Draw(Renderer& renderer, float r) 
+void Graphics::Shape::Draw(Graphics::Renderer& renderer, float r)
 {
     shader.Bind();
     shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
@@ -32,10 +31,10 @@ void Shape::Draw(Renderer& renderer, float r)
     renderer.Draw(va, ib, shader);
 }
 
-void Shape::AddShape(const std::string& id, Shape* shape) {
+void Graphics::Shape::AddShape(const std::string& id, Shape* shape) {
     shapes[id] = shape;
 }
 
-Shape* Shape::GetShape(const std::string& id) {
+Graphics::Shape* Graphics::Shape::GetShape(const std::string& id) {
     return shapes.at(id); // Use .at() for safer access
 }
